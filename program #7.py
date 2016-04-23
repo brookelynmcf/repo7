@@ -13,18 +13,53 @@
 ## 
 ## ERROR HANDLING:
 ##      Any Special Error handling to be noted.  Wager not less than 0. etc
-##
 ## OTHER COMMENTS:
 ##      Any special comments
 ##
 ######################################################################
-def user_input(answer):
-    answer = input(question)
-    return answer
+def open_file(correct):
+   return open(correct)
 
-file = open("movieReviews.txt","r")
-for line in file.readlines():
-    slc = line[0]#Prints out ratings only
-    print(slc)
+def get_user_input(question):
+    while True:
+        answer = input(question).lower()
+        try:
+            correct = open_file(answer)
+        except FileNotFoundError:
+            print ("The file",answer,"was not found. Please try again.")
+        except IOError:
+            print("Please check the file name",answer,"for any incorrect special characters")
+        else:
+            return correct
 
-question = user_input("Please enter the file containing a list of words you would like to analyze.")
+class Word(object):
+    def __init__(self,word):
+        self.word = word
+        self.word_count = 0
+        self.review_total = 0
+
+class Review(object):
+    def __init__(self,rating,review):
+        self.rating = rating
+        self.review = review
+
+
+
+
+while True:
+    movie_file = open("movieReviews.txt","r")
+    review_lst = []
+    for line in movie_file.readlines():
+        derp = Review(line[0],line [1:])
+        review_lst.append(derp)
+
+
+    word_file = get_user_input("Please enter the file containing a list of words you would like to analyze.")
+    lst = []
+    for item in word_file:
+        movie_word = Word(item)
+        lst.append(movie_word)
+        #for line in reviews:
+            #if movie_word in reviews:
+                #movie_word.word_count += 1
+
