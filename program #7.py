@@ -35,8 +35,17 @@ def get_user_input(question):
 class Word(object):
     def __init__(self,word):
         self.word = word
-        self.word_count = 0
-        self.review_total = 0
+        self.rating_review_lst = []
+    def avg_rating(self):
+        total_rating = 0
+        for number in self.rating_review_lst:
+            total_rating += number
+        if len(self.rating_review_lst) > 0:
+            return total_rating/len(self.rating_review_lst)
+        else:
+            return 0
+    #def st_deviation(self):
+
 
 class Review(object):
     def __init__(self,rating,review):
@@ -45,21 +54,21 @@ class Review(object):
 
 
 
-
 while True:
     movie_file = open("movieReviews.txt","r")
     review_lst = []
     for line in movie_file.readlines():
-        derp = Review(line[0],line [1:])
+        derp = Review(int(line[0]),(line [1:]).lower())
         review_lst.append(derp)
 
 
     word_file = get_user_input("Please enter the file containing a list of words you would like to analyze.")
-    lst = []
+    word_lst = []
     for item in word_file:
-        movie_word = Word(item)
-        lst.append(movie_word)
-        #for line in reviews:
-            #if movie_word in reviews:
-                #movie_word.word_count += 1
-
+        movie_word = Word((" "+(item.strip("\n"))+" ").lower())
+        word_lst.append(movie_word)
+    for review in review_lst:
+        for word in word_lst:
+            if word.word in review.review:
+                word.rating_review_lst.append(review.rating)
+    print("Fart")
