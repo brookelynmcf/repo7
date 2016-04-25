@@ -23,6 +23,8 @@ def open_file(correct):
 def get_user_input(question):
     while True:
         answer = input(question).lower()
+        if answer == "quit":
+            return 0
         try:
             correct = open_file(answer)
         except FileNotFoundError:
@@ -39,7 +41,7 @@ def sort_order(question):
         user_answer = input(question)
         try:
             cnvrt = int(user_answer)
-            if cnvrt not in range(1,4):
+            if cnvrt not in range(1,5):
                 print("Your answer must be an integer from 1 to 4.")
                 continue
             else:
@@ -81,6 +83,8 @@ class Word(object):
     def st_deviation(self):
         avg = self.avg_rating()
         sum_numerator = 0
+        if len(self.rating_lst) == 0:
+            return 0
         for number in self.rating_lst:
             sum_numerator += ((number-avg)**2)
         return sum_numerator/len(self.rating_lst)
@@ -97,14 +101,20 @@ class Review(object):
 
 
 while True:
-    movie_file = open("movieReviews.txt","r")
-    review_lst = []
-    for line in movie_file.readlines():
-        derp = Review(int(line[0]),(line [1:]).lower())
-        review_lst.append(derp)
+    try:
+        movie_file = open("movieReviews.txt","r")
+        review_lst = []
+        for line in movie_file.readlines():
+            derp = Review(int(line[0]),(line [1:]).lower())
+            review_lst.append(derp)
+    except FileNotFoundError:
+        print("movieReviews.txt was not found. Save it in the same location as the program and try again.")
+        break
 
-
-    word_file = get_user_input("Please enter the file containing a list of words you would like to analyze.")
+    print("Word Sentiment Analyzer\n")
+    word_file = get_user_input("Please enter the file containing a list of words you would like to analyze or type quit to quit the program.")
+    if word_file == 0:
+        break
     order_question = sort_order("In which order would you like your data displayed?\n1.)Avg ascending\n2.)Avg descending\n3.)Standard deviation ascending\n4.)Standard deviation descending\n")
     word_lst = []
     for item in word_file:
