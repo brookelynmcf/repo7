@@ -35,7 +35,18 @@ def get_user_input(question):
             return correct
 
 def sort_order(question):
-    user_answer = input(question)
+    while True:
+        user_answer = input(question)
+        try:
+            cnvrt = int(user_answer)
+            if cnvrt not in range(1,4):
+                print("Your answer must be an integer from 1 to 4.")
+                continue
+            else:
+                break
+        except Exception:
+            print("Please use a integer from 1 to 4.")
+            continue
     return user_answer
 
 def sort_ratings_stdeviation(order,words_list):
