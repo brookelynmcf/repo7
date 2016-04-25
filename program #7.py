@@ -34,13 +34,21 @@ def get_user_input(question):
         else:
             return correct
 
-def table_input(question):
+def sort_order(question):
     user_answer = input(question)
+    return user_answer
 
-#def make_table():
-    #answer = input(order)
-
-
+def sort_ratings_stdeviation(order,words_list):
+    if order == "1":
+        return sorted(words_list,key=lambda x:x.avg_rating(),reverse=False)
+    elif order == "2":
+        return sorted(words_list,key=lambda x:x.avg_rating(),reverse=True)
+    elif order == "3":
+        return sorted(words_list,key=lambda x:x.st_deviation(),reverse=False)
+    elif order == "4":
+        return sorted(words_list,key=lambda x:x.st_deviation(),reverse=True)
+    else:
+        return words_list
 
 
 class Word(object):
@@ -48,7 +56,6 @@ class Word(object):
         self.word = word
         self.rating_lst = []
         self.rating = 0
-        self. word_count = 0
     def avg_rating(self):
         if len(self.rating_lst) > 0:
             return self.total_rating()/len(self.rating_lst)
@@ -66,6 +73,8 @@ class Word(object):
         for number in self.rating_lst:
             sum_numerator += ((number-avg)**2)
         return sum_numerator/len(self.rating_lst)
+    def word_count(self):
+        return len(self.rating_lst)
 
 
 
@@ -85,7 +94,7 @@ while True:
 
 
     word_file = get_user_input("Please enter the file containing a list of words you would like to analyze.")
-    order_question = table_input("In which order would you like your data displayed?\n1.)Avg ascending\n2.)Avg descending\n3.)Standard deviation ascending\n4.)Standard deviation descending\n")
+    order_question = sort_order("In which order would you like your data displayed?\n1.)Avg ascending\n2.)Avg descending\n3.)Standard deviation ascending\n4.)Standard deviation descending\n")
     word_lst = []
     for item in word_file:
         movie_word = Word((" "+(item.strip("\n"))+" ").lower())
@@ -95,4 +104,8 @@ while True:
             if word.word in review.review:
                 word.rating_lst.append(review.rating)
 
+    print("{:<15}{:^15}{:>15}{:>30}".format("Word","Occurence","Avg","Std deviation"))
     print("-"*75)
+    for word in sort_ratings_stdeviation(order_question,word_lst):
+        print("{:<15}{:^15}{:>15.2f}{:>30.2f}".format(word.word,word.word_count(),word.avg_rating(),word.st_deviation()))
+
